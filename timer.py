@@ -292,5 +292,5 @@ quitButton.pack()
 
 main(Toplevel())
 update_time()
-root.withdraw()
+# root.withdraw()
 root.mainloop()
