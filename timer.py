@@ -206,7 +206,7 @@ def start(event=''):
     current_time = now.strftime("%H:%M:%S")
     current_day = now.strftime("%d/%b/%Y")
     update = user.query.filter(user.username == user_name).first()
-    update.start_time = current_time
+    # update.start_time = current_time
     day = days.query.filter(days.user_id == update.id).first()
     if  day is None: 
         new_day = days(user_id = update.id, day= current_day, work_hours = "00:00:00" )
