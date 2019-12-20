@@ -266,7 +266,7 @@ def about_program():
 def export_user():
     update = user.query.filter(user.username == user_name).first()
     wb = Workbook() 
-    con=connect(user="nnd7fl2rcgzmls5l",password="ex0isaorv23gefvw",host="thzz882efnak0xod.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",database="a9bwgfq691fo7jb9")
+    con=connect(user="mfeyq8tq95ldf7g3",password="ld1ic4nbalv55wv4",host="f8ogy1hm9ubgfv2s.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",database="j962xvujyevc1gxk")
     days_table=sql.read_sql ('select * from days WHERE user_id ='+str(update.id),con)
     writer= pd.ExcelWriter('work_hours.xlsx')
     days_table.to_excel(writer,"Sheet1")
