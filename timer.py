@@ -80,6 +80,7 @@ class main:
         self.repeat_pass = StringVar()
         self.work_hours = StringVar()
         self.widgets()
+    
     def login(self):
         global user_name
         global timer
@@ -206,12 +207,14 @@ def start(event=''):
     current_time = now.strftime("%H:%M:%S")
     current_day = now.strftime("%d/%b/%Y")
     update = user.query.filter(user.username == user_name).first()
-    # update.start_time = current_time
     day = days.query.filter(days.user_id == update.id).first()
     if  day is None: 
         new_day = days(user_id = update.id, day= current_day, work_hours = "00:00:00" )
         db.session.add(new_day)
         db.session.commit()
+    if start:
+        btn_start.configure(text='Pause', command=pause)
+    
 
 
 time = None
@@ -230,6 +233,9 @@ def pause():
         day = days.query.filter(db.and_(days.user_id == update.id, days.day == now.day)).first()
         day.work_hours = time
         db.session.commit()
+    if state == False:
+        btn_start.configure(text='Start', command=start)
+
         
 def timeFormat(time):
     if time < 10:
@@ -249,10 +255,22 @@ def reset():
         timeText.configure(text='00:00:00')
 
 
-def exist():
+def exit():
     if messagebox.askokcancel("Exit", "Are You sure?"):
         root.destroy()
 
+
+def about_program():
+    messagebox.showinfo(title='About Timer', message='Time Tracker Version 1.0.0')
+
+def export_user():
+    update = user.query.filter(user.username == user_name).first()
+    wb = Workbook() 
+    con=connect(user="nnd7fl2rcgzmls5l",password="ex0isaorv23gefvw",host="thzz882efnak0xod.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",database="a9bwgfq691fo7jb9")
+    days_table=sql.read_sql ('select * from days WHERE user_id ='+str(update.id),con)
+    writer= pd.ExcelWriter('work_hours.xlsx')
+    days_table.to_excel(writer,"Sheet1")
+    writer.save()
 
 
 
@@ -263,6 +281,8 @@ root.title('Timer')
 # root.iconbitmap('python.ico')
 root.geometry("400x300+500+150")
 root.resizable(False, False)
+main_menu = Menu(root)
+root.config(menu=main_menu)
 timer = [0, 0, 0]
 pattern = '{0:02d}:{1:02d}:{2:02d}'
 
@@ -281,16 +301,26 @@ name_label.pack()
 timeText = ttk.Label(lower_frame, text="", font=("Helvetica", 30))
 timeText.pack()
 
-pauseButton = ttk.Button(lower_frame, text='Pause', command=pause)
-pauseButton.pack()
 
-resetButton = ttk.Button(lower_frame, text='Reset', command=reset)
-resetButton.pack()
 
-quitButton = ttk.Button(lower_frame, text='Quit', command=exist)
-quitButton.pack()
+
+
+# File
+file_menu = Menu(main_menu, tearoff=0)
+file_menu.add_command(label="Reset" , command=reset)
+file_menu.add_command(label="Export" , command=export_user)
+file_menu.add_separator()
+file_menu.add_command(label="Exit",command=exit)
+main_menu.add_cascade(label="File", menu=file_menu)
+
+# About
+help_menu = Menu(main_menu, tearoff=0)
+
+
+help_menu.add_command(label="About", command=about_program)
+main_menu.add_cascade(label="Help", menu=help_menu)
 
 main(Toplevel())
 update_time()
-# root.withdraw()
+root.withdraw()
 root.mainloop()
