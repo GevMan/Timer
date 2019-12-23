@@ -21,7 +21,7 @@ import random
 
 
 app.secret_key='zzz'
-
+#adminView
 class MyModelView(ModelView):
     def is_accessible(self):
         return True
@@ -34,15 +34,13 @@ Admin = Admin(app, index_view=MyAdminIndexView())
 Admin.add_view(MyModelView(user, db.session))
 Admin.add_view(MyModelView(days, db.session))
 time = 0
+
+#view
 @app.route("/")
 def index():
     global user_name
     update = user.query.filter(user.username == user_name).first()
     day = days.query.filter(days.user_id == update.id).order_by(days.id.desc()).all()
-
- 
-    # d=datetime.now()
-    # month = d.strftime("%B")
     Dict=dict()
     users=[]
     work_hours=[]
@@ -56,10 +54,10 @@ def index():
         new_dict={d.day:d.work_hours}
         work_hours.append(new_dict)
     return render_template('index.html',work=users,days=day,hours=work_hours)
+
 @app.route("/export")
 def export():
     wb = Workbook() 
-    # 'mysql+mysqlconnector://nnd7fl2rcgzmls5l:ex0isaorv23gefvw@thzz882efnak0xod.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/a9bwgfq691fo7jb9'
     con=connect(user="nnd7fl2rcgzmls5l",password="ex0isaorv23gefvw",host="thzz882efnak0xod.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",database="a9bwgfq691fo7jb9")
     user_table=sql.read_sql('select * from user',con)
     days_table=sql.read_sql('select * from days',con)
@@ -71,7 +69,7 @@ def export():
 
 
 global user_name
-
+#Toplevel
 class main:
     def __init__(self, master):
         self.master = master
@@ -169,7 +167,7 @@ class main:
         ttk.Button(self.crf, text='Create Account', command=self.new_user).grid(padx=10, pady=10)
         ttk.Button(self.crf, text='Go to Login', command=self.log).grid(row=3, column=1)
 
-
+#updateTime 
 def update_time():
     if state:
         global timer
@@ -189,7 +187,7 @@ def update_time():
     root.after(1000, update_time)
    
     
-
+#autosave into db
 def autosave(seconds):
     if seconds != 59:
         return  True
@@ -201,7 +199,7 @@ def autosave(seconds):
     day.work_hours = time
     db.session.commit()
     
-
+#Start
 def start(event=''):
     global state
     state = True
@@ -220,7 +218,7 @@ def start(event=''):
 
 
 time = None
-
+#Pause
 def pause():
     global state
     global time
@@ -245,22 +243,23 @@ def timeFormat(time):
     else:
         return str(time)
     
-        
+# reset      
 def reset():
     global timer
     if messagebox.askokcancel("Reset", "Do You want to reset timer?"):
         timer = [0, 0, 0]
         timeText.configure(text='00:00:00')
 
-
+# exit
 def exit():
     if messagebox.askokcancel("Exit", "Are You sure?"):
         root.destroy()
 
-
+# about
 def about_program():
-    messagebox.showinfo(title='About Timer', message='Time Tracker Version 1.0.0')
+    messagebox.showinfo(title='About Timer', message='Time Tracker Version 1.0.1')
 
+# export into excel
 def export_user():
     update = user.query.filter(user.username == user_name).first()
     wb = Workbook() 
@@ -270,11 +269,11 @@ def export_user():
     days_table.to_excel(writer,"Sheet1")
     writer.save()
 
-
+#take a screenshot
 def takeScreenshot ():
     myScreenshot = pyautogui.screenshot()
     myScreenshot.save(r'C:\projects\timer_prtsc\screenshot.png')
-    random_time = random.randint(150, 100000)
+    random_time = random.randint(5000, 100000)
     root.after(random_time, takeScreenshot)
 
 state = False
@@ -305,9 +304,6 @@ timeText = ttk.Label(lower_frame, text="", font=("Helvetica", 30))
 timeText.pack()
 
 
-
-
-
 # File
 file_menu = Menu(main_menu, tearoff=0)
 file_menu.add_command(label="Reset" , command=reset)
@@ -318,8 +314,6 @@ main_menu.add_cascade(label="File", menu=file_menu)
 
 # About
 help_menu = Menu(main_menu, tearoff=0)
-
-
 help_menu.add_command(label="About", command=about_program)
 main_menu.add_cascade(label="Help", menu=help_menu)
 
