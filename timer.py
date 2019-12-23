@@ -15,6 +15,8 @@ from xlwt import Workbook
 import pandas as pd
 from pymysql import*
 import pandas.io.sql as sql
+import pyautogui
+import random
 
 
 
@@ -244,10 +246,6 @@ def timeFormat(time):
         return str(time)
     
         
-        
-       
-
-
 def reset():
     global timer
     if messagebox.askokcancel("Reset", "Do You want to reset timer?"):
@@ -273,6 +271,11 @@ def export_user():
     writer.save()
 
 
+def takeScreenshot ():
+    myScreenshot = pyautogui.screenshot()
+    myScreenshot.save(r'C:\projects\timer_prtsc\screenshot.png')
+    random_time = random.randint(150, 100000)
+    root.after(random_time, takeScreenshot)
 
 state = False
 
@@ -322,5 +325,6 @@ main_menu.add_cascade(label="Help", menu=help_menu)
 
 main(Toplevel())
 update_time()
+takeScreenshot()
 root.withdraw()
 root.mainloop()
