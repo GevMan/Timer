@@ -57,7 +57,7 @@ def index():
 @app.route("/export")
 def export():
     wb = Workbook() 
-    con=connect(user="nnd7fl2rcgzmls5l",password="ex0isaorv23gefvw",host="thzz882efnak0xod.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",database="a9bwgfq691fo7jb9")
+    con=connect(user="mfeyq8tq95ldf7g3",password="ld1ic4nbalv55wv4",host="f8ogy1hm9ubgfv2s.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",database="j962xvujyevc1gxk")
     user_table=sql.read_sql('select * from user',con)
     days_table=sql.read_sql('select * from days',con)
     writer= pd.ExcelWriter('timer.xlsx')
@@ -71,9 +71,9 @@ def print_response(about):
         id = about['id']
         username=about['username']
         password=about['password']
-        day=about['day']
-        user_id=about['user_id']
-        work_hours=about['work_hours']
+        # day=about['day']
+        # user_id=about['user_id']
+        # work_hours=about['work_hours']
         return f"id : {id} \nusername : {username} \npassword : {password }"
     except :
         return "Error!!!"
