@@ -4,7 +4,7 @@ from tkinter import *
 from tkinter import ttk
 from ttkthemes import ThemedTk
 from tkinter import messagebox
-from flask import Flask,redirect,render_template,url_for
+from flask import Flask,redirect,render_template,url_for,jsonify,json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from flask_admin import Admin,AdminIndexView
@@ -17,8 +17,7 @@ from pymysql import*
 import pandas.io.sql as sql
 import pyautogui
 import random
-
-
+import requests
 
 app.secret_key='zzz'
 #adminView
@@ -67,6 +66,27 @@ def export():
     writer.save()
     return redirect(url_for('index'))
 
+def print_response(about):
+    try:
+        id = about['id']
+        username=about['username']
+        password=about['password']
+        day=about['day']
+        user_id=about['user_id']
+        work_hours=about['work_hours']
+        return f"id : {id} \nusername : {username} \npassword : {password }"
+    except :
+        return "Error!!!"
+
+@app.route("/response")
+def response():
+    response = requests.get("https://uploadtimer.herokuapp.com/")    
+    print(response.text)
+    about = response.json()    
+    print("-*/-*/-*/-*/-*/-*/*-")
+    print(about)
+    print(print_response(about))
+    return(print_response(about))
 
 global user_name
 #Toplevel
@@ -236,7 +256,7 @@ def pause():
     if state == False:
         btn_start.configure(text='Start', command=start)
 
-        
+
 def timeFormat(time):
     if time < 10:
         return '0' + str(time)
